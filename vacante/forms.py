@@ -89,3 +89,73 @@ class BulkUploadDetalladoPregradoForm(forms.Form):
         label="Archivo Excel",
         help_text="Seleccione un archivo Excel (.xlsx) con una sola columna de descripciones."
     )
+    
+    
+from django import forms
+from .models import CampoAmplioPosgrado
+
+class CampoAmplioPosgradoForm(forms.ModelForm):
+    class Meta:
+        model = CampoAmplioPosgrado
+        fields = ['descripcion']
+        labels = {
+            'descripcion': 'Descripción',
+        }
+        error_messages = {
+            'descripcion': {
+                'unique': 'Ya existe un Campo Amplio con esta descripción.',
+                'required': 'Este campo es obligatorio.',
+            },
+        }
+
+from django import forms
+from .models import CampoEspecificoPosgrado
+
+class CampoEspecificoPosgradoForm(forms.ModelForm):
+    class Meta:
+        model = CampoEspecificoPosgrado
+        fields = ['descripcion']
+        labels = {
+            'descripcion': 'Descripción',
+        }
+        error_messages = {
+            'descripcion': {
+                'unique': 'Ya existe un Campo Específico con esta descripción.',
+                'required': 'Este campo es obligatorio.',
+            },
+        }
+
+
+from django import forms
+from .models import CampoDetalladoPosgrado
+
+class CampoDetalladoPosgradoForm(forms.ModelForm):
+    class Meta:
+        model = CampoDetalladoPosgrado
+        fields = ['descripcion']
+        labels = {
+            'descripcion': 'Descripción',
+        }
+        error_messages = {
+            'descripcion': {
+                'unique': 'Ya existe un Campo Detallado con esta descripción.',
+                'required': 'Este campo es obligatorio.',
+            },
+        }
+
+class BulkUploadCampoAmplioPosgradoForm(forms.Form):
+    excel_file = forms.FileField(
+        label="Archivo Excel",
+        help_text="Seleccione un archivo Excel (.xlsx) con una sola columna de descripciones."
+    )
+
+class BulkUploadCampoEspecificoPosgradoForm(forms.Form):
+    excel_file = forms.FileField(
+        label="Archivo Excel",
+        help_text="Seleccione un archivo Excel (.xlsx) con una sola columna de descripciones."
+    )
+class BulkUploadCampoDetalladoPosgradoForm(forms.Form):
+    excel_file = forms.FileField(
+        label="Archivo Excel",
+        help_text="Seleccione un archivo Excel (.xlsx) con una sola columna de descripciones."
+    )

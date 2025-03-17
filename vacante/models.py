@@ -69,3 +69,51 @@ class NivelAcademico(models.Model):
     def get_absolute_url(self):
         return reverse('nivel_academico_detail', kwargs={'pk': self.pk})
 
+class CampoAmplioPosgrado(models.Model):
+    descripcion = models.CharField(max_length=300, null=True, blank=True, default="", unique=True)
+
+    class Meta:
+        verbose_name = 'Campo Amplio Posgrado'
+        verbose_name_plural = 'Campos Amplios Posgrado'
+
+    def __str__(self):
+        return self.descripcion if self.descripcion else "Sin descripción"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('campo_amplio_posgrado_detail', kwargs={'pk': self.pk})
+
+
+class CampoEspecificoPosgrado(models.Model):
+    descripcion = models.CharField(max_length=300, unique=True)
+
+    class Meta:
+        verbose_name = 'Campo Específico Posgrado'
+        verbose_name_plural = 'Campos Específicos Posgrado'
+
+    def __str__(self):
+        return self.descripcion
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('campo_especifico_posgrado_detail', kwargs={'pk': self.pk})
+
+class CampoDetalladoPosgrado(models.Model):
+    descripcion = models.CharField(max_length=300, unique=True)
+
+    class Meta:
+        verbose_name = 'Campo Detallado Posgrado'
+        verbose_name_plural = 'Campos Detallados Posgrado'
+
+    def __str__(self):
+        return self.descripcion
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('campo_detallado_posgrado_detail', kwargs={'pk': self.pk})

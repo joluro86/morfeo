@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-[#58abfd] mb-6 text-center">Lista de Campos Amplios - Posgrado</h1>
+
+    <div class="mb-4 flex justify-end gap-2">
+        <a href="{% url 'campo_amplio_posgrado_create' %}" class="bg-[#58abfd] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Crear Nuevo Campo Amplio
+        </a>
+        <a href="{% url 'campo_amplio_posgrado_bulk_upload' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            Carga Masiva
+        </a>
+    </div>
+
+    {% if campos %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+                <tr>
+                    <th class="py-1 px-2 border-b text-left">No.</th>
+                    <th class="py-1 px-2 border-b text-left">Id</th>
+                    <th class="py-1 px-2 border-b text-left">Descripción</th>
+                    <th class="py-1 px-2 border-b text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for campo in campos %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-1 px-2 border-b text-left">{{ forloop.counter }}</td>
+                    <td class="py-1 px-2 border-b text-left">{{ campo.id }}</td>
+                    <td class="py-1 px-2 border-b text-left">{{ campo.descripcion|default:"Sin descripción" }}</td>
+                    <td class="py-1 px-2 border-b text-center">
+                        <form action="{% url 'campo_amplio_posgrado_delete' campo.pk %}" method="post" onsubmit="return confirm('¿Está seguro de eliminar este campo?');" class="inline-block">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600">No hay campos amplios registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}
