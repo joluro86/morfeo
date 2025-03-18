@@ -117,3 +117,17 @@ class CampoDetalladoPosgrado(models.Model):
 
     def get_absolute_url(self):
         return reverse('campo_detallado_posgrado_detail', kwargs={'pk': self.pk})
+
+
+class Vacante(models.Model):
+    """Modelo para gestionar las vacantes según nivel académico"""
+    numero = models.BigIntegerField(unique=True)  # Número único de la vacante
+    nivel_academico = models.ForeignKey('NivelAcademico', on_delete=models.CASCADE, related_name='vacantes')
+
+    def __str__(self):
+        return f"Vacante {self.numero} - {self.nivel_academico}"
+
+    
+
+    
+    

@@ -4,6 +4,8 @@ from vacante.views_campo_amplio_pre import campo_amplio_list, campo_amplio_creat
 from vacante.views_campo_detallado_pos import campo_detallado_posgrado_bulk_upload, campo_detallado_posgrado_create, campo_detallado_posgrado_delete, campo_detallado_posgrado_list
 from vacante.views_campo_especifico_pos import campo_especifico_posgrado_bulk_upload, campo_especifico_posgrado_create, campo_especifico_posgrado_delete, campo_especifico_posgrado_list
 from vacante.views_campo_especifico_pre import campo_especifico_list,  campo_especifico_create, campo_especifico_delete, campo_especifico_bulk_upload
+from vacante.views_vacante import VacanteCreateView, VacanteDeleteView, VacanteListView, VacanteUpdateView, limpiar
+
 from .views_nivel_academico import (
     nivel_academico_list,
     nivel_academico_create,
@@ -58,4 +60,9 @@ urlpatterns = [
     path('posgrado/campo-detallado/eliminar/<int:pk>/', campo_detallado_posgrado_delete, name='campo_detallado_posgrado_delete'),
     path('posgrado/campo-detallado/carga-masiva/', campo_detallado_posgrado_bulk_upload, name='campo_detallado_posgrado_bulk_upload'),
 
+    path('', VacanteListView.as_view(), name='lista_vacantes'),
+    path('nueva/', VacanteCreateView.as_view(), name='crear_vacante'),
+    path('editar/<int:pk>/', VacanteUpdateView.as_view(), name='editar_vacante'),
+    path('eliminar/<int:pk>/', VacanteDeleteView.as_view(), name='eliminar_vacante'),
+    path('limpiar/', limpiar, name="limpiar"),
 ]

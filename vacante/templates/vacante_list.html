@@ -1,0 +1,52 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-[#58abfd] mb-6 text-center">Lista de Vacantes</h1>
+
+    <div class="mb-4 flex justify-end gap-2">
+        <a href="{% url 'crear_vacante' %}" class="bg-[#58abfd] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Crear Nueva Vacante
+        </a>
+    </div>
+
+    {% if vacantes %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b">No.</th>
+                    <th class="py-2 px-4 border-b">ID</th>
+                    <th class="py-2 px-4 border-b text-left">Número de Vacante</th>
+                    <th class="py-2 px-4 border-b text-left">Nivel Académico</th>
+                    <th class="py-2 px-4 border-b text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vacante in vacantes %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-1 px-2 border-b">{{ forloop.counter }}</td>
+                    <td class="py-1 px-2 border-b">{{ vacante.id }}</td>
+                    <td class="py-1 px-2 border-b text-left">{{ vacante.numero }}</td>
+                    <td class="py-1 px-2 border-b text-left">{{ vacante.nivel_academico }}</td>
+                    <td class="py-1 px-2 border-b text-center">
+                        <a href="{% url 'editar_vacante' vacante.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded">
+                            Editar
+                        </a>
+                        <form action="{% url 'eliminar_vacante' vacante.pk %}" method="post" onsubmit="return confirm('¿Está seguro de eliminar esta vacante?');" class="inline-block">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600">No hay vacantes registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
+from .models import Vacante, CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
 
 class CampoAmplioPregradoForm(forms.ModelForm):
     class Meta:
@@ -126,7 +126,6 @@ class CampoEspecificoPosgradoForm(forms.ModelForm):
         }
 
 
-from django import forms
 from .models import CampoDetalladoPosgrado
 
 class CampoDetalladoPosgradoForm(forms.ModelForm):
@@ -159,3 +158,19 @@ class BulkUploadCampoDetalladoPosgradoForm(forms.Form):
         label="Archivo Excel",
         help_text="Seleccione un archivo Excel (.xlsx) con una sola columna de descripciones."
     )
+    
+
+from .models import Vacante
+
+class VacanteForm(forms.ModelForm):
+    class Meta:
+        model = Vacante
+        fields = ['numero', 'nivel_academico']
+        labels = {
+            'numero': 'Número de Vacante',
+            'nivel_academico': 'Nivel Académico'
+        }
+        widgets = {
+            'numero': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número único'}),
+            'nivel_academico': forms.Select(attrs={'class': 'form-control'}),
+        }
