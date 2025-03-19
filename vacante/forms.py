@@ -174,3 +174,7 @@ class VacanteForm(forms.ModelForm):
             'numero': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número único'}),
             'nivel_academico': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class CandidatoUploadForm(forms.Form):
+    archivo_excel = forms.FileField(label="Subir archivo Excel", help_text="Seleccione un archivo con la lista de candidatos.")

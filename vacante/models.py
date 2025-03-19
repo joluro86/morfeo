@@ -127,6 +127,22 @@ class Vacante(models.Model):
     def __str__(self):
         return f"Vacante {self.numero} - {self.nivel_academico}"
 
+
+class Candidato(models.Model):
+    id_vacante = models.IntegerField()
+    identificacion = models.CharField(max_length=20, unique=False)
+    nombre = models.CharField(max_length=255)
+    es_interno = models.BooleanField()
+    titulo = models.CharField(max_length=255)
+    otro_titulo = models.CharField(max_length=255, blank=True, null=True)
+    nivel_estudios = models.CharField(max_length=50)
+    fecha_fin_estudios = models.CharField(max_length=20, blank=True, null=True)  # Ahora es CharField
+    fecha_diploma = models.CharField(max_length=20, blank=True, null=True)  # Ahora es CharField
+    cumple_requisitos = models.BooleanField(default=False)
+    justificacion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.nombre} - {self.titulo} - {'Cumple' if self.cumple_requisitos else 'No cumple'}"
     
 
     

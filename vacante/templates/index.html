@@ -3,96 +3,82 @@
 <head>
     <meta charset="UTF-8" lang="es-CO">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>Morfeo - Gestión de Vacantes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    
 </head>
 <body class="bg-gray-100 text-gray-900">
 
     <!-- Navbar -->
     <nav class="bg-[#58abfd] text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="#" class="text-xl font-bold">Morfeo</a>
+                    <a href="#" class="text-2xl font-bold tracking-wide">Morfeo</a>
                 </div>
 
                 <!-- Menú de navegación -->
-                <div class="hidden md:flex space-x-4">
-                    <!-- Menú 1 -->
-<div x-data="{ open: false }" class="relative">
-    <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Vacantes</button>
-    <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-40 shadow-lg rounded">
-        <a href="{% url 'crear_vacante' %}" class="block px-4 py-2 hover:bg-gray-200">Crear Vacante</a>
-        <a href="{% url 'lista_vacantes' %}" class="block px-4 py-2 hover:bg-gray-200">Lista de Vacantes</a>
-    </div>
-</div>
-
+                <div class="hidden md:flex space-x-6">
                     
-
-                <!-- Menú 2: Nivel Académico -->
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Nivel Académico</button>
-                    <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-40 shadow-lg rounded">
-                        <a href="{% url 'nivel_academico_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista de Niveles Académicos</a>
-                        <a href="{% url 'nivel_academico_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear Nivel Académico</a>
-                    </div>
-                </div>
-
-                                <!-- Menú combinado: Items Pregrado -->
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Items Pregrado</button>
-                    <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-56 shadow-lg rounded">
-                        <!-- Grupo: Campo Detallado -->
-                        <div class="border-b">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Detallado</span>
-                            <a href="{% url 'campo_detallado_pregrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_detallado_pregrado_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
-                        </div>
-                        <!-- Grupo: Campo Específico -->
-                        <div class="border-b mt-1">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Específico</span>
-                            <a href="{% url 'campo_especifico_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_especifico_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
-                        </div>
-                        <!-- Grupo: Campo Amplio -->
-                        <div class="mt-1">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Amplio</span>
-                            <a href="{% url 'campo_amplio_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_amplio_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
+                    <!-- Vacantes -->
+                    <div x-data="{ open: false }" x-cloak class="relative">
+                        <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Gestión de Vacantes</button>
+                        <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-48 shadow-lg rounded-md border border-gray-200">
+                            <a href="{% url 'crear_vacante' %}" class="block px-4 py-2 hover:bg-gray-200">➕ Crear Vacante</a>
+                            <a href="{% url 'lista_vacantes' %}" class="block px-4 py-2 hover:bg-gray-200">📋 Lista de Vacantes</a>
                         </div>
                     </div>
-                </div>
 
-                <!-- Menú combinado: Items Posgrado -->
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Items Posgrado</button>
-                    <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-56 shadow-lg rounded">
-                        <!-- Grupo: Campo Detallado -->
-                        <div class="border-b">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Detallado</span>
-                            <a href="{% url 'campo_detallado_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_detallado_posgrado_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
+                    <!-- Candidatos -->
+                    <div x-data="{ open: false }" x-cloak class="relative">
+                        <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Gestión de Candidatos</button>
+                        <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-48 shadow-lg rounded-md border border-gray-200">
+                            <a href="{% url 'cargar_candidatos' %}" class="block px-4 py-2 hover:bg-gray-200">⬆️ Subir Candidatos</a>
+                            <a href="{% url 'lista_candidatos' %}" class="block px-4 py-2 hover:bg-gray-200">📜 Lista de Candidatos</a>
                         </div>
-                        <!-- Grupo: Campo Específico -->
-                        <div class="border-b mt-1">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Específico</span>
-                            <a href="{% url 'campo_especifico_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_especifico_posgrado_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
+                    </div>
+
+                    <!-- Nivel Académico -->
+                    <div x-data="{ open: false }" x-cloak class="relative">
+                        <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Niveles Académicos</button>
+                        <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-56 shadow-lg rounded-md border border-gray-200">
+                            <a href="{% url 'nivel_academico_list' %}" class="block px-4 py-2 hover:bg-gray-200">🎓 Lista de Niveles</a>
+                            <a href="{% url 'nivel_academico_create' %}" class="block px-4 py-2 hover:bg-gray-200">➕ Agregar Nivel</a>
                         </div>
-                        <!-- Grupo: Campo Amplio -->
-                        <div class="mt-1">
-                            <span class="block px-4 py-2 font-bold text-gray-800">Campo Amplio</span>
-                            <a href="{% url 'campo_amplio_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">Lista</a>
-                            <a href="{% url 'campo_amplio_posgrado_create' %}" class="block px-4 py-2 hover:bg-gray-200">Crear</a>
+                    </div>
+
+                    <!-- Ítems Académicos -->
+                    <div x-data="{ open: false }" x-cloak class="relative">
+                        <button @click="open = !open" class="px-4 py-2 hover:bg-blue-600 rounded">Áreas Académicas</button>
+                        <div x-show="open" @click.away="open = false" class="absolute bg-white text-black mt-2 w-60 shadow-lg rounded-md border border-gray-200">
+                            
+                            <!-- Pregrado -->
+                            <div class="border-b">
+                                <span class="block px-4 py-2 font-bold text-gray-800">📘 Pregrado</span>
+                                <a href="{% url 'campo_detallado_pregrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">🔹 Campos Detallados</a>
+                                <a href="{% url 'campo_especifico_list' %}" class="block px-4 py-2 hover:bg-gray-200">🔸 Campos Específicos</a>
+                                <a href="{% url 'campo_amplio_list' %}" class="block px-4 py-2 hover:bg-gray-200">🌍 Campos Amplios</a>
+                            </div>
+
+                            <!-- Posgrado -->
+                            <div class="mt-1">
+                                <span class="block px-4 py-2 font-bold text-gray-800">📕 Posgrado</span>
+                                <a href="{% url 'campo_detallado_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">🔹 Campos Detallados</a>
+                                <a href="{% url 'campo_especifico_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">🔸 Campos Específicos</a>
+                                <a href="{% url 'campo_amplio_posgrado_list' %}" class="block px-4 py-2 hover:bg-gray-200">🌍 Campos Amplios</a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-
-                </div>
-
-                <!-- Botón de menú móvil -->
+                <!-- Menú móvil -->
                 <div class="md:hidden flex items-center">
                     <button @click="menuOpen = !menuOpen" x-data="{ menuOpen: false }" class="focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -104,17 +90,11 @@
         </div>
     </nav>
 
-    
-
-        
-
-        
-
     <!-- Contenido principal -->
     <main class="max-w-4xl mx-auto py-10 px-5 text-center">
         {% block content %}
-        <h1 class="text-3xl font-bold text-[#58abfd]">¡Bienvenido a Morfeo!</h1>
-        <p class="mt-4 text-gray-700">App para la gestión de vacantes de Epm.</p>
+        <h1 class="text-4xl font-bold text-[#58abfd]">Bienvenido a Morfeo</h1>
+        <p class="mt-4 text-gray-700 text-lg">Plataforma para la gestión eficiente de vacantes y candidatos.</p>
         {% endblock content %}
     </main>
 
