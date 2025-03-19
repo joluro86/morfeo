@@ -1,0 +1,47 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold text-[#58abfd] mb-4 text-center flex items-center justify-center">
+        ⚙️ Configuración de Columnas
+    </h1>
+
+    <div class="bg-white p-5 rounded-lg shadow-md border border-gray-200">
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for field in form %}
+                    <div>
+                        <label class="block text-gray-700 font-medium text-sm mb-1">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out text-sm">
+                💾 Guardar Configuración
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="{% url 'lista_candidatos' %}"
+            class="inline-block bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out text-sm">
+            ⬅️ Volver a la Lista de Candidatos
+        </a>
+    </div>
+</div>
+
+<!-- Aplicar clases de Tailwind a los inputs -->
+<style>
+    input[type="text"],
+    input[type="number"],
+    select {
+        @apply w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-sm focus:ring-2 focus:ring-[#58abfd] focus:outline-none;
+    }
+</style>
+{% endblock %}

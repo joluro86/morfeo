@@ -5,7 +5,9 @@ from vacante.views_campo_detallado_pos import campo_detallado_posgrado_bulk_uplo
 from vacante.views_campo_especifico_pos import campo_especifico_posgrado_bulk_upload, campo_especifico_posgrado_create, campo_especifico_posgrado_delete, campo_especifico_posgrado_list
 from vacante.views_campo_especifico_pre import campo_especifico_list,  campo_especifico_create, campo_especifico_delete, campo_especifico_bulk_upload
 from vacante.views_vacante import VacanteCreateView, VacanteDeleteView, VacanteListView, VacanteUpdateView, limpiar
-from vacante.views_candidatos import cargar_candidatos, lista_candidatos, exportar_candidatos_excel
+from vacante.views_candidatos import cargar_candidatos, lista_candidatos, exportar_candidatos_excel, limpiar_candidatos
+from vacante.views_subir_candidatos import editar_configuracion_candidato
+
 from .views_nivel_academico import (
     nivel_academico_list,
     nivel_academico_create,
@@ -69,4 +71,7 @@ urlpatterns = [
     path('candidatos/cargar/', cargar_candidatos, name='cargar_candidatos'),
     path('candidatos/lista/', lista_candidatos, name='lista_candidatos'),
     path('candidatos/exportar/', exportar_candidatos_excel, name='exportar_candidatos_excel'),
+    path('candidatos/limpiar/', limpiar_candidatos, name='limpiar_candidatos'),
+    
+    path("candidatos/configuracion/", editar_configuracion_candidato, name="editar_configuracion_candidato"),
 ]

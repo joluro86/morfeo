@@ -145,5 +145,23 @@ class Candidato(models.Model):
         return f"{self.nombre} - {self.titulo} - {'Cumple' if self.cumple_requisitos else 'No cumple'}"
     
 
-    
+from django.db import models
+
+class ConfiguracionCandidato(models.Model):
+    nombre = models.CharField(max_length=255, default="Configuración predeterminada")
+
+    # Definir los índices de las columnas del archivo Excel
+    col_id_vacante = models.IntegerField(default=0)
+    col_identificacion = models.IntegerField(default=1)
+    col_nombre = models.IntegerField(default=2)
+    col_es_interno = models.IntegerField(default=3)
+    col_titulo = models.IntegerField(default=4)
+    col_otro_titulo = models.IntegerField(default=5)
+    col_nivel_estudios = models.IntegerField(default=6)
+    col_fecha_fin_estudios = models.IntegerField(default=7)
+    col_fecha_diploma = models.IntegerField(default=8)
+
+    def __str__(self):
+        return f"Configuración de Candidato ({self.nombre})"
+
     

@@ -178,3 +178,47 @@ class VacanteForm(forms.ModelForm):
 
 class CandidatoUploadForm(forms.Form):
     archivo_excel = forms.FileField(label="Subir archivo Excel", help_text="Seleccione un archivo con la lista de candidatos.")
+
+
+from django import forms
+from .models import ConfiguracionCandidato
+
+class ConfiguracionCandidatoForm(forms.ModelForm):
+    class Meta:
+        model = ConfiguracionCandidato
+        fields = [
+            "nombre",
+            "col_id_vacante",
+            "col_identificacion",
+            "col_nombre",
+            "col_es_interno",
+            "col_titulo",
+            "col_otro_titulo",
+            "col_nivel_estudios",
+            "col_fecha_fin_estudios",
+            "col_fecha_diploma",
+        ]
+        labels = {
+            "nombre": "Nombre de la configuración",
+            "col_id_vacante": "Columna de ID Vacante",
+            "col_identificacion": "Columna de Identificación",
+            "col_nombre": "Columna de Nombre",
+            "col_es_interno": "Columna de Candidato Interno",
+            "col_titulo": "Columna de Título",
+            "col_otro_titulo": "Columna de Otro Título",
+            "col_nivel_estudios": "Columna de Nivel de Estudios",
+            "col_fecha_fin_estudios": "Columna de Fecha Fin de Estudios",
+            "col_fecha_diploma": "Columna de Fecha de Diploma",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "col_id_vacante": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_identificacion": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_nombre": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_es_interno": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_titulo": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_otro_titulo": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_nivel_estudios": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_fecha_fin_estudios": forms.NumberInput(attrs={"class": "form-control"}),
+            "col_fecha_diploma": forms.NumberInput(attrs={"class": "form-control"}),
+        }
