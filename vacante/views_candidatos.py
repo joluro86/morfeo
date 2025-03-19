@@ -52,12 +52,8 @@ def cargar_candidatos(request):
 
 def lista_candidatos(request):
     candidatos = Candidato.objects.all().order_by('titulo')
-    paginator = Paginator(candidatos, 20)  # Mostramos 20 registros por página
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "lista_candidatos.html", {"page_obj": page_obj})
+    return render(request, "lista_candidatos.html", {"page_obj": candidatos})
 
 def exportar_candidatos_excel(request):
     candidatos = Candidato.objects.all().values()
