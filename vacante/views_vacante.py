@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Vacante
 from .forms import VacanteForm
+
+def index(request):
+    return render(request, 'index.html')
 
 # Listar vacantes
 class VacanteListView(ListView):
