@@ -29,10 +29,8 @@
                     <th class="py-1 px-2 border-b">Vacante</th>
                     <th class="py-1 px-2 border-b">Nombre</th>
                     <th class="py-1 px-2 border-b">Identificación</th>
-                    <th class="py-1 px-2 border-b">Interno</th>
                     <th class="py-1 px-2 border-b">Título</th>
                     <th class="py-1 px-2 border-b">Nivel de Estudios</th>
-                    <th class="py-1 px-2 border-b">Fecha Fin Estudios</th>
                     <th class="py-1 px-2 border-b">Cumple Requisitos</th>
                     <th class="py-1 px-2 border-b">Justificación</th>
                 </tr>
@@ -43,16 +41,8 @@
                     <td class="py-0 px-1 border-b">{{ candidato.id_vacante }}</td>
                     <td class="py-0 px-1 border-b text-[10px]">{{ candidato.nombre }}</td>
                     <td class="py-0 px-1 border-b">{{ candidato.identificacion }}</td>
-                    <td class="py-0 px-1 border-b">
-                        {% if candidato.es_interno %}
-                            <span class="text-green-600 font-bold">Sí</span>
-                        {% else %}
-                            <span class="text-red-600 font-bold">No</span>
-                        {% endif %}
-                    </td>
                     <td class="py-0 px-1 border-b">{{ candidato.titulo }}</td>
                     <td class="py-0 px-1 border-b">{{ candidato.nivel_estudios }}</td>
-                    <td class="py-0 px-1 border-b">{{ candidato.fecha_fin_estudios }}</td>
                     <td class="py-0 px-1 border-b text-center">
                         {% if candidato.cumple_requisitos %}
                             <span>Si cumple</span>
