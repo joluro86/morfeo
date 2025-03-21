@@ -138,7 +138,7 @@ class Candidato(models.Model):
     nivel_estudios = models.CharField(max_length=50)
     fecha_fin_estudios = models.CharField(max_length=20, blank=True, null=True)  # Ahora es CharField
     fecha_diploma = models.CharField(max_length=20, blank=True, null=True)  # Ahora es CharField
-    cumple_requisitos = models.BooleanField(default=False)
+    cumple_requisitos = models.BooleanField(blank=True, null=True)
     justificacion = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -164,4 +164,17 @@ class ConfiguracionCandidato(models.Model):
     def __str__(self):
         return f"Configuración de Candidato ({self.nombre})"
 
-    
+
+class ProgramaAcademicoSnies(models.Model):
+    nombre_del_programa = models.CharField(max_length=500, blank=True, null=True)
+    titulo_otorgado = models.CharField(max_length=500, blank=True, null=True)
+    cine_f_2013_ac_campo_amplio = models.CharField(max_length=500, blank=True, null=True)
+    cine_f_2013_ac_campo_especifico = models.CharField(max_length=500, blank=True, null=True)
+    cine_f_2013_ac_campo_detallado = models.CharField(max_length=500, blank=True, null=True)
+    area_de_conocimiento = models.CharField(max_length=255, blank=True, null=True)
+    nucleo_basico_del_conocimiento = models.CharField(max_length=255, blank=True, null=True)
+    nivel_academico = models.CharField(max_length=255, blank=True, null=True)
+    nivel_de_formacion = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre_del_programa

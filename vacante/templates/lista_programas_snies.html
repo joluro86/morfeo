@@ -1,0 +1,125 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-xl font-bold text-[#58abfd] mb-4 text-center">Lista de Programas Académicos Snies</h1>
+
+    <div class="mb-2 flex justify-between items-center text-xs">
+        <a href="{% url 'cargar_programas_academicos_snies' %}" class="bg-[#58abfd] hover:bg-blue-600 text-white font-bold py-1 px-4 rounded">
+            Subir Archivo Excel
+        </a>
+        <a href="{% url 'exportar_programas_snies_excel' %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-4 rounded">
+            Exportar a Excel
+        </a>
+    </div>
+
+    {% if programas %}
+    <div class="overflow-x-auto min-w-full">
+        <table id="tablaProgramas" class="bg-white border border-gray-200 text-[9px] text-start mx-auto min-w-full">
+            <thead>
+                <tr class="bg-[#58abfd] text-white text-xs">
+                    <th class="py-1 px-2 border-b">Nombre del Programa</th>
+                    <th class="py-1 px-2 border-b">Título Otorgado</th>
+                    <th class="py-1 px-2 border-b">Campo Amplio</th>
+                    <th class="py-1 px-2 border-b">Campo Específico</th>
+                    <th class="py-1 px-2 border-b">Campo Detallado</th>
+                    <th class="py-1 px-2 border-b">Área de Conocimiento</th>
+                    <th class="py-1 px-2 border-b">Núcleo Básico</th>
+                    <th class="py-1 px-2 border-b">Nivel Académico</th>
+                    <th class="py-1 px-2 border-b">Nivel de Formación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for programa in programas %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-0 px-1 border-b text-[10px]">{{ programa.nombre_del_programa }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.titulo_otorgado }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.cine_f_2013_ac_campo_amplio }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.cine_f_2013_ac_campo_especifico }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.cine_f_2013_ac_campo_detallado }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.area_de_conocimiento }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.nucleo_basico_del_conocimiento }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.nivel_academico }}</td>
+                    <td class="py-0 px-1 border-b">{{ programa.nivel_de_formacion }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600">No hay programas académicos registrados.</p>
+    {% endif %}
+</div>
+
+<!-- Script para DataTables con traducción y estilos mejorados -->
+<script>
+    $(document).ready(function () {
+        $('#tablaProgramas').DataTable({
+            "pageLength": 10,
+            "language": {
+                "search": "🔍 Buscar:",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se encontraron registros",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros en total)",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "drawCallback": function () {
+                $('#tablaProgramas tbody tr').css({
+                    "line-height": "1rem",
+                    "padding": "2px"
+                });
+
+                $('#tablaProgramas td, #tablaProgramas th').css({
+                    "padding": "4px 6px",
+                    "font-size": "10px"
+                });  
+            }
+        });
+    });
+</script>
+
+<!-- Estilos para personalizar la paginación y la tabla -->
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 4px 8px;
+        margin: 1px;
+        background-color: white !important;
+        border: 1px solid #58abfd !important;
+        color: #58abfd !important;
+        border-radius: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #58abfd !important;
+        color: white !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background-color: #58abfd !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    table.dataTable tbody tr {
+        line-height: 1rem !important;
+    }
+
+    table.dataTable td, table.dataTable th {
+        padding: 4px 6px !important;
+        font-size: 10px !important;
+    }
+    
+    .dataTables_filter {
+        margin-bottom: 10px !important;
+    }
+</style>
+
+{% endblock %}

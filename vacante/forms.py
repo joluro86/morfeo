@@ -222,3 +222,35 @@ class ConfiguracionCandidatoForm(forms.ModelForm):
             "col_fecha_fin_estudios": forms.NumberInput(attrs={"class": "form-control"}),
             "col_fecha_diploma": forms.NumberInput(attrs={"class": "form-control"}),
         }
+
+from django import forms
+from .models import ProgramaAcademicoSnies
+
+class ProgramaAcademicoSniesForm(forms.ModelForm):
+    class Meta:
+        model = ProgramaAcademicoSnies
+        fields = "__all__"  # Incluir todos los campos
+
+        widgets = {
+            "nombre_del_programa": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "titulo_otorgado": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "cine_f_2013_ac_campo_amplio": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "cine_f_2013_ac_campo_especifico": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "cine_f_2013_ac_campo_detallado": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "area_de_conocimiento": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "nucleo_basico_del_conocimiento": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "nivel_academico": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+            "nivel_de_formacion": forms.TextInput(attrs={"class": "w-full p-2 border border-gray-300 rounded"}),
+        }
+
+        labels = {
+            "nombre_del_programa": "Nombre del Programa",
+            "titulo_otorgado": "Título Otorgado",
+            "cine_f_2013_ac_campo_amplio": "Campo Amplio (CINE F 2013)",
+            "cine_f_2013_ac_campo_especifico": "Campo Específico (CINE F 2013)",
+            "cine_f_2013_ac_campo_detallado": "Campo Detallado (CINE F 2013)",
+            "area_de_conocimiento": "Área de Conocimiento",
+            "nucleo_basico_del_conocimiento": "Núcleo Básico del Conocimiento",
+            "nivel_academico": "Nivel Académico",
+            "nivel_de_formacion": "Nivel de Formación",
+        }

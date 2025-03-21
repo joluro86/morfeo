@@ -55,9 +55,9 @@
                     <td class="py-0 px-1 border-b">{{ candidato.fecha_fin_estudios }}</td>
                     <td class="py-0 px-1 border-b text-center">
                         {% if candidato.cumple_requisitos %}
-                            <span class="text-green-600 font-bold">Sí</span>
+                            <span>Si cumple</span>
                         {% else %}
-                            <span class="text-red-600 font-bold">No</span>
+                        <span class="text-red-600 font-bold">No cumple</span>
                         {% endif %}
                     </td>
                     <td class="py-0 px-1 border-b">{{ candidato.justificacion|default:"-" }}</td>

@@ -7,7 +7,8 @@ from vacante.views_campo_especifico_pre import campo_especifico_list,  campo_esp
 from vacante.views_vacante import VacanteCreateView, VacanteDeleteView, VacanteListView, VacanteUpdateView, limpiar, index
 from vacante.views_candidatos import cargar_candidatos, lista_candidatos, exportar_candidatos_excel, limpiar_candidatos
 from vacante.views_subir_candidatos import editar_configuracion_candidato
-from vacante.views_gestion_candidato import gestionar_bachiller
+from vacante.views_gestion_candidato import analizar_candidatos_bachiller, gestionar_candidatos
+from vacante.views_snies import cargar_programas_academicos_snies
 
 from .views_nivel_academico import (
     nivel_academico_list,
@@ -21,6 +22,12 @@ from .views_campo_detallado_pregrado import (
     campo_detallado_create,
     campo_detallado_delete,
     campo_detallado_bulk_upload,
+)
+
+from vacante.views_snies import (
+    cargar_programas_academicos_snies,
+    lista_programas_academicos_snies,
+    exportar_programas_snies_excel
 )
 
 
@@ -64,17 +71,27 @@ urlpatterns = [
     path('posgrado/campo-detallado/eliminar/<int:pk>/', campo_detallado_posgrado_delete, name='campo_detallado_posgrado_delete'),
     path('posgrado/campo-detallado/carga-masiva/', campo_detallado_posgrado_bulk_upload, name='campo_detallado_posgrado_bulk_upload'),
 
+    # URLs para Vacante
     path('lista', VacanteListView.as_view(), name='lista_vacantes'),
     path('nueva/', VacanteCreateView.as_view(), name='crear_vacante'),
     path('editar/<int:pk>/', VacanteUpdateView.as_view(), name='editar_vacante'),
     path('eliminar/<int:pk>/', VacanteDeleteView.as_view(), name='eliminar_vacante'),
     path('limpiar/', limpiar, name="limpiar"),
     
+    # URLs para Candidato
     path('candidatos/cargar/', cargar_candidatos, name='cargar_candidatos'),
     path('candidatos/lista/', lista_candidatos, name='lista_candidatos'),
     path('candidatos/exportar/', exportar_candidatos_excel, name='exportar_candidatos_excel'),
     path('candidatos/limpiar/', limpiar_candidatos, name='limpiar_candidatos'),
-    
     path("candidatos/configuracion/", editar_configuracion_candidato, name="editar_configuracion_candidato"),
-    path('bachiller/', gestionar_bachiller, name="'gestionar_bachiller"),
+    
+    # URLs para Gestion candidato
+    path('bachiller/', analizar_candidatos_bachiller, name="gestionar_bachiller"),
+    path('gestionar_candidatos/', gestionar_candidatos, name="gestionar_candidatos"),
+    
+    # URLs para Snies
+    path("cargar-programas-snies/", cargar_programas_academicos_snies, name="cargar_programas_academicos_snies"),
+    path('programas/cargar/', cargar_programas_academicos_snies, name='cargar_programas_academicos_snies'),
+    path('programas/lista/', lista_programas_academicos_snies, name='lista_programas_academicos_snies'),
+    path('programas/exportar/', exportar_programas_snies_excel, name='exportar_programas_snies_excel'),
 ]
