@@ -1,0 +1,74 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mx-auto px-2 py-4">
+    <h1 class="text-xl font-bold text-[#58abfd] mb-4 text-center">Listado de Novedades en Equivalencias</h1>
+
+    {% if novedades %}
+    <div class="overflow-x-auto min-w-full">
+        <table id="tablaNovedades" class="bg-white border border-gray-200 text-[10px] text-start mx-auto min-w-full">
+            <thead>
+                <tr class="bg-[#58abfd] text-white text-xs">
+                    <th class="py-1 px-2 border-b">#</th>
+                    <th class="py-1 px-2 border-b">Título Original</th>
+                    <th class="py-1 px-2 border-b">Descripción</th>
+                    <th class="py-1 px-2 border-b">¿Revisado?</th>
+                    <th class="py-1 px-2 border-b">Sugerencia SNIES</th>
+                    <th class="py-1 px-2 border-b text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for novedad in novedades %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-1 px-2 border-b">{{ forloop.counter }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.equivalencia.titulo }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.descripcion }}</td>
+                    <td class="py-1 px-2 border-b text-center">
+                        {% if novedad.revisado %}
+                            <span class="text-green-600 font-semibold">Sí</span>
+                        {% else %}
+                            <span class="text-red-600 font-semibold">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-1 px-2 border-b">
+                        {{ novedad.sugerencia_snies.titulo_otorgado|default:"-" }}
+                    </td>
+                    <td class="py-1 px-2 border-b text-center">
+                        <a href="{% url 'editar_novedades_equivalencia' novedad.equivalencia.id %}"
+                           class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600">No hay novedades registradas.</p>
+    {% endif %}
+</div>
+
+<!-- Script DataTables -->
+<script>
+    $(document).ready(function () {
+        $('#tablaNovedades').DataTable({
+            "pageLength": 10,
+            "language": {
+                "search": "🔍 Buscar:",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se encontraron registros",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros en total)",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

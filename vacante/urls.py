@@ -30,6 +30,13 @@ from vacante.views_snies import (
     exportar_programas_snies_excel
 )
 
+from vacante.views_equivalencia_titulo import (
+    CargarExcelEquivalenciaTitulo,
+    ListaEquivalenciaTitulo,
+    ListaNovedades,
+    BuscarEquivalenciasView,
+    EditarNovedadesEquivalencia
+)
 
 urlpatterns = [
     path('', index, name='index'),
@@ -94,4 +101,10 @@ urlpatterns = [
     path('programas/cargar/', cargar_programas_academicos_snies, name='cargar_programas_academicos_snies'),
     path('programas/lista/', lista_programas_academicos_snies, name='lista_programas_academicos_snies'),
     path('programas/exportar/', exportar_programas_snies_excel, name='exportar_programas_snies_excel'),
+
+    path('equivalencia/cargar/', CargarExcelEquivalenciaTitulo.as_view(), name='cargar_equivalencia_titulo'),
+    path('equivalencia/lista/', ListaEquivalenciaTitulo.as_view(), name='lista_equivalencia_titulo'),
+    path('equivalencias/novedades/', ListaNovedades.as_view(), name='lista_novedades_equivalencia'),
+    path('equivalencias/buscar-equivalencias/', BuscarEquivalenciasView.as_view(), name='buscar_equivalencias_snies'),
+    path('equivalencias/novedades/<int:pk>/editar/', EditarNovedadesEquivalencia.as_view(), name='editar_novedades_equivalencia'),
 ]

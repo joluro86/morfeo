@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vacante, CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
+from .models import Vacante, EquivalenciaTitulo, CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
 
 class CampoAmplioPregradoForm(forms.ModelForm):
     class Meta:
@@ -254,3 +254,40 @@ class ProgramaAcademicoSniesForm(forms.ModelForm):
             "nivel_academico": "Nivel Académico",
             "nivel_de_formacion": "Nivel de Formación",
         }
+
+
+class EquivalenciaTituloForm(forms.ModelForm):
+    class Meta:
+        model = EquivalenciaTitulo
+        fields = ['titulo', 'otro_titulo', 'nivel_estudios', 'equivalente_snies']
+        widgets = {
+            'titulo': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+            }),
+            'otro_titulo': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+            }),
+            'nivel_estudios': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+            }),
+            'equivalente_snies': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
+            }),
+        }
+
+from django import forms
+from .models import NovedadEquivalencia, ProgramaAcademicoSnies
+
+class EditarNovedadesForm(forms.ModelForm):
+    sugerencia_snies_text = forms.CharField(
+        label='Título SNIES sugerido',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full border rounded px-3 py-1',
+            'list': 'snies-titulos'
+        })
+    )
+
+    class Meta:
+        model = NovedadEquivalencia
+        fields = ['revisado']

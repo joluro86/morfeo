@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-4">
+    <h1 class="text-xl font-bold text-[#58abfd] text-center mb-4">Subir Equivalencias de Título (Excel)</h1>
+
+    {% if messages %}
+    <ul class="mb-4">
+        {% for message in messages %}
+        <li class="text-sm text-center text-{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+        {% csrf_token %}
+        <input type="file" name="excel_file" required
+               class="block w-full text-sm text-gray-600 border rounded-lg file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border-0 file:text-sm file:font-semibold
+                      file:bg-[#58abfd] file:text-white hover:file:bg-blue-600"/>
+
+        <button type="submit"
+                class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            Cargar archivo
+        </button>
+    </form>
+</div>
+{% endblock %}

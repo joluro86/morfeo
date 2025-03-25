@@ -145,8 +145,6 @@ class Candidato(models.Model):
         return f"{self.nombre} - {self.titulo} - {'Cumple' if self.cumple_requisitos else 'No cumple'}"
     
 
-from django.db import models
-
 class ConfiguracionCandidato(models.Model):
     nombre = models.CharField(max_length=255, default="Configuración predeterminada")
 
@@ -178,3 +176,64 @@ class ProgramaAcademicoSnies(models.Model):
 
     def __str__(self):
         return self.nombre_del_programa
+    
+
+class EquivalenciaTitulo(models.Model):
+    titulo = models.CharField(max_length=500, blank=True, null=True)
+    otro_titulo = models.CharField(max_length=500, blank=True, null=True)
+    nivel_estudios = models.CharField(max_length=500, blank=True, null=True)
+    equivalente_snies = models.CharField(max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return self.titulo
+
+
+class NovedadEquivalencia(models.Model):
+    equivalencia = models.ForeignKey(EquivalenciaTitulo, on_delete=models.CASCADE, related_name='novedades')
+    descripcion = models.TextField()
+    sugerencia_snies = models.ForeignKey(
+        'ProgramaAcademicoSnies',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='novedades_asignadas'
+    )
+    revisado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Novedad: {self.equivalencia.titulo}"
+
+
+from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalencia
+
+def buscar_equivalencias_snies():
+    palabras_excluir = ['bachiller', 'completar', 'posgrado', 'postgrado']
+
+    equivalencias = EquivalenciaTitulo.objects.filter(equivalente_snies__isnull=True)
+
+    for eq in equivalencias:
+        titulo_base = (eq.titulo or '').lower()
+        otro_titulo_base = (eq.otro_titulo or '').lower()
+
+        # Ignorar títulos con palabras prohibidas
+        if any(p in titulo_base for p in palabras_excluir) or any(p in otro_titulo_base for p in palabras_excluir):
+            continue
+
+        # Buscar coincidencias por título o por otro_titulo
+        match = ProgramaAcademicoSnies.objects.filter(
+            models.Q(titulo_otorgado__icontains=eq.titulo) |
+            models.Q(nombre_del_programa__icontains=eq.titulo) |
+            models.Q(titulo_otorgado__icontains=eq.otro_titulo) |
+            models.Q(nombre_del_programa__icontains=eq.otro_titulo)
+        ).first()
+
+        if match:
+            eq.equivalente_snies = match.titulo_otorgado
+            eq.save()
+        else:
+            # Evitar duplicar novedades
+            if not NovedadEquivalencia.objects.filter(equivalencia=eq).exists():
+                NovedadEquivalencia.objects.create(
+                    equivalencia=eq,
+                    descripcion=f"No se encontró coincidencia para el título '{eq.titulo}'"
+                )
