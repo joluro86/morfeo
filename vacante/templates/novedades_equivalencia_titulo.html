@@ -9,32 +9,24 @@
         <table id="tablaNovedades" class="bg-white border border-gray-200 text-[10px] text-start mx-auto min-w-full">
             <thead>
                 <tr class="bg-[#58abfd] text-white text-xs">
-                    <th class="py-1 px-2 border-b">#</th>
-                    <th class="py-1 px-2 border-b">Título Original</th>
-                    <th class="py-1 px-2 border-b">Descripción</th>
-                    <th class="py-1 px-2 border-b">¿Revisado?</th>
-                    <th class="py-1 px-2 border-b">Sugerencia SNIES</th>
+                    <th class="py-1 px-2 border-b">Candidato</th>
+                    <th class="py-1 px-2 border-b">Vacante</th>
+                    <th class="py-1 px-2 border-b">Título</th>
+                    <th class="py-1 px-2 border-b">Otro titulo</th>
+                    <th class="py-1 px-2 border-b">Novedad</th>
                     <th class="py-1 px-2 border-b text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for novedad in novedades %}
                 <tr class="hover:bg-gray-100">
-                    <td class="py-1 px-2 border-b">{{ forloop.counter }}</td>
-                    <td class="py-1 px-2 border-b">{{ novedad.equivalencia.titulo }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.identificacion_candidato|default:"No reporta" }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.id_vacante }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.titulo|default:"No reporta" }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.otro_titulo|default:"No reporta" }}</td>
                     <td class="py-1 px-2 border-b">{{ novedad.descripcion }}</td>
                     <td class="py-1 px-2 border-b text-center">
-                        {% if novedad.revisado %}
-                            <span class="text-green-600 font-semibold">Sí</span>
-                        {% else %}
-                            <span class="text-red-600 font-semibold">No</span>
-                        {% endif %}
-                    </td>
-                    <td class="py-1 px-2 border-b">
-                        {{ novedad.sugerencia_snies.titulo_otorgado|default:"-" }}
-                    </td>
-                    <td class="py-1 px-2 border-b text-center">
-                        <a href="{% url 'editar_novedades_equivalencia' novedad.equivalencia.id %}"
+                        <a href="{% url 'editar_novedades_equivalencia' novedad.id_equivalencia %}"
                            class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs">
                             Editar
                         </a>

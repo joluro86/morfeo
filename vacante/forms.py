@@ -276,7 +276,7 @@ class EquivalenciaTituloForm(forms.ModelForm):
         }
 
 from django import forms
-from .models import NovedadEquivalencia, ProgramaAcademicoSnies
+from .models import NovedadEquivalencia
 
 class EditarNovedadesForm(forms.ModelForm):
     sugerencia_snies_text = forms.CharField(
@@ -290,4 +290,17 @@ class EditarNovedadesForm(forms.ModelForm):
 
     class Meta:
         model = NovedadEquivalencia
-        fields = ['revisado']
+        fields = [
+            'descripcion',
+            'id_vacante',
+            'identificacion_candidato',
+            'titulo',
+            'otro_titulo',
+        ]
+        widgets = {
+            'descripcion': forms.TextInput(attrs={'class': 'form-control'}),
+            'id_vacante': forms.TextInput(attrs={'class': 'form-control'}),
+            'identificacion_candidato': forms.TextInput(attrs={'class': 'form-control'}),
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'otro_titulo': forms.TextInput(attrs={'class': 'form-control'}),
+        }

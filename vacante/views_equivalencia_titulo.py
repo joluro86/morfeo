@@ -1,10 +1,19 @@
 import openpyxl
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import EquivalenciaTitulo, NovedadEquivalencia
+from .models import Candidato, EquivalenciaTitulo, NovedadEquivalencia
 from django.views import View
 from django.core.files.storage import default_storage
-
+from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalencia
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.views import View
+from django.db.models import Q
+from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalencia
+from django.views import View
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import EquivalenciaTitulo, NovedadEquivalencia, ProgramaAcademicoSnies
+from .forms import EditarNovedadesForm
 
 class CargarExcelEquivalenciaTitulo(View):
     def get(self, request):
@@ -23,12 +32,18 @@ class CargarExcelEquivalenciaTitulo(View):
 
         # Recorrer desde la segunda fila (sin encabezado)
         for row in ws.iter_rows(min_row=2, values_only=True):
+            if EquivalenciaTitulo.objects.filter(titulo=row[2]) or EquivalenciaTitulo.objects.filter(otro_titulo=row[3]):
+                continue
+               
             EquivalenciaTitulo.objects.create(
-                titulo=row[0],                 # Columna A
-                otro_titulo=row[1],           # Columna B
-                nivel_estudios=row[2],        # Columna C
-                equivalente_snies=row[3]      # Columna D
+                id_vacante=row[0],            # Columna A
+                id_candidato=row[1],          # Columna B
+                titulo=row[2],                # Columna C
+                otro_titulo=row[3],           # Columna D
+                nivel_estudios=row[4],        # Columna E
+                equivalente_snies=row[5]      # Columna F
             )
+            
 
         messages.success(request, 'Datos cargados correctamente desde el Excel.')
         return redirect('lista_equivalencia_titulo')
@@ -37,6 +52,7 @@ class CargarExcelEquivalenciaTitulo(View):
 
 class ListaEquivalenciaTitulo(View):
     def get(self, request):
+        #EquivalenciaTitulo.objects.all().delete()
         equivalencias = EquivalenciaTitulo.objects.all()
         return render(request, 'equivalencia_titulo_lista.html', {
             'equivalencias': equivalencias
@@ -44,9 +60,9 @@ class ListaEquivalenciaTitulo(View):
         
 class ListaNovedades(View):
     def get(self, request):
-        novedades = NovedadEquivalencia.objects.select_related('equivalencia', 'sugerencia_snies')
+        #NovedadEquivalencia.objects.all().delete()
+        novedades = NovedadEquivalencia.objects.filter(descripcion="Sin titulo equivalente")
         return render(request, 'novedades_equivalencia_titulo.html', {'novedades': novedades})
-
 
 
 class BuscarEquivalenciasView(View):
@@ -55,99 +71,70 @@ class BuscarEquivalenciasView(View):
         messages.success(request, "Búsqueda de equivalencias completada.")
         return redirect('lista_equivalencia_titulo')
 
-from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalencia
-from django.db.models import Q
-
-from django.db.models import Q
-from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalencia
-
 def buscar_equivalencias_snies():
-    palabras_excluir = ['bachiller', 'completar', 'posgrado', 'postgrado']
-
-    equivalencias = EquivalenciaTitulo.objects.filter(equivalente_snies__isnull=True)
-
+    equivalencias = EquivalenciaTitulo.objects.all()
+    cont1 = 1
+    
     for eq in equivalencias:
-        titulo = (eq.titulo or '').strip()
-        otro_titulo = (eq.otro_titulo or '').strip()
-
-        if not titulo and not otro_titulo:
-            continue  # Si ambos están vacíos, no tiene sentido buscar
-
-        texto = titulo.lower() + ' ' + otro_titulo.lower()
-        if any(p in texto for p in palabras_excluir):
-            continue
-
-        # Armar consulta dinámica
-        query = Q()
-        if titulo:
-            query |= Q(titulo_otorgado__icontains=titulo)
-            query |= Q(nombre_del_programa__icontains=titulo)
-        if otro_titulo:
-            query |= Q(titulo_otorgado__icontains=otro_titulo)
-            query |= Q(nombre_del_programa__icontains=otro_titulo)
-
-        match = ProgramaAcademicoSnies.objects.filter(query).first()
-
-        if match:
-            eq.equivalente_snies = match.titulo_otorgado  # O puedes guardar el ID si haces FK
+        if eq.nivel_estudios=="Bachiller" or eq.nivel_estudios=="bachiller" or eq.nivel_estudios=="Completar" or eq.nivel_estudios=="completar":
+            eq.equivalente_snies= "No aplica"
             eq.save()
-        else:
-            if not NovedadEquivalencia.objects.filter(equivalencia=eq).exists():
+            continue
+        
+        if eq.titulo is not None:
+            pro1 = ProgramaAcademicoSnies.objects.filter(titulo_otorgado=eq.titulo).first()
+            if pro1 is None:
+                pro2= ProgramaAcademicoSnies.objects.filter(nombre_del_programa=eq.titulo).first()
+            if pro1 is not None:              
+                eq.equivalente_snies=pro1.titulo_otorgado
+                eq.save()
+            elif pro2 is not None:
+                eq.equivalente_snies=pro2.nombre_del_programa
+                eq.save()
+            
+            else: 
+                # Aquí creamos la NovedadEquivalencia si no se encontró coincidencia en SNIES
                 NovedadEquivalencia.objects.create(
-                    equivalencia=eq,
-                    descripcion=f"No se encontró coincidencia para: '{eq.titulo or eq.otro_titulo}'"
+                    descripcion="Sin titulo equivalente",
+                    id_vacante=eq.id_vacante,
+                    identificacion_candidato=eq.id_candidato,
+                    titulo=eq.titulo,
+                    otro_titulo=eq.otro_titulo,
+                    id_equivalencia=eq.id,
                 )
-
-from django.shortcuts import get_object_or_404
-from django.views import View
-from django.forms import ModelChoiceField
-from django import forms
-
-class EditarNovedadesForm(forms.ModelForm):
-    sugerencia_snies = forms.ModelChoiceField(
-        queryset=ProgramaAcademicoSnies.objects.all(),
-        required=False,
-        label='Seleccionar título SNIES',
-        widget=forms.Select(attrs={'class': 'w-full rounded border p-1'})
-    )
-
-    class Meta:
-        model = NovedadEquivalencia
-        fields = ['sugerencia_snies', 'revisado']
-
-from django.views import View
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import EquivalenciaTitulo, NovedadEquivalencia, ProgramaAcademicoSnies
-from .forms import EditarNovedadesForm
-
+                print(cont1)
+                cont1 += 1 
+             
+        
 class EditarNovedadesEquivalencia(View):
     def get(self, request, pk):
         equivalencia = get_object_or_404(EquivalenciaTitulo, pk=pk)
-        novedades = equivalencia.novedades.all()
-        forms = [EditarNovedadesForm(instance=n, prefix=str(n.id)) for n in novedades]
         lista_snies = ProgramaAcademicoSnies.objects.only('titulo_otorgado')  # más ligero
         return render(request, 'editar_novedades_equivalencia_titulo.html', {
             'equivalencia': equivalencia,
-            'forms': zip(novedades, forms),
             'lista_snies': lista_snies
         })
 
     def post(self, request, pk):
         equivalencia = get_object_or_404(EquivalenciaTitulo, pk=pk)
-        novedades = equivalencia.novedades.all()
-        for n in novedades:
-            prefix = str(n.id)
-            form = EditarNovedadesForm(request.POST, instance=n, prefix=prefix)
-            if form.is_valid():
-                texto_sugerido = request.POST.get(f'{prefix}-sugerencia_snies_text', '').strip()
-                sugerido = ProgramaAcademicoSnies.objects.filter(titulo_otorgado=texto_sugerido).first()
-                n.sugerencia_snies = sugerido
-                n.revisado = form.cleaned_data['revisado']
-                n.save()
+        # Extraemos el dato enviado desde el input
+        texto_sugerido = request.POST.get('nuevo_titulo_equivalente', '').strip()
+        print("Texto sugerido:", texto_sugerido)
+        # Buscamos en ProgramaAcademicoSnies un registro cuyo titulo_otorgado coincida con lo ingresado
+        sugerido = ProgramaAcademicoSnies.objects.filter(titulo_otorgado=texto_sugerido).first()
+        if sugerido:
+            equivalencia.equivalente_snies = sugerido.titulo_otorgado
+        else:
+            equivalencia.equivalente_snies = texto_sugerido  # Se asigna el valor ingresado si no se encuentra en SNIES
+        equivalencia.save()
 
-                # Opcional: actualizar también el campo equivalente_snies del modelo principal
-                if sugerido:
-                    equivalencia.equivalente_snies = sugerido.titulo_otorgado
-                    equivalencia.save()
+        # Actualizamos la novedad asociada para quitar la marca de "Sin titulo equivalente"
+        novedad = NovedadEquivalencia.objects.filter(id_equivalencia=equivalencia.id).first()
+        if novedad:
+            if novedad.descripcion == "Sin titulo equivalente":
+                novedad.descripcion = equivalencia.equivalente_snies
+                novedad.save()
 
+        messages.success(request, "Equivalencia actualizada correctamente.")
         return redirect('lista_equivalencia_titulo')
+

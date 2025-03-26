@@ -26,6 +26,8 @@
         <table id="tablaEquivalencias" class="bg-white border border-gray-200 text-[9px] text-start mx-auto min-w-full">
             <thead>
                 <tr class="bg-[#58abfd] text-white text-xs">
+                    <th class="py-1 px-2 border-b">Doc candidato</th>
+                    <th class="py-1 px-2 border-b">Vacante</th>
                     <th class="py-1 px-2 border-b">Título</th>
                     <th class="py-1 px-2 border-b">Otro Título</th>
                     <th class="py-1 px-2 border-b">Nivel de Estudios</th>
@@ -35,10 +37,12 @@
             <tbody>
                 {% for item in equivalencias %}
                 <tr class="hover:bg-gray-100">
-                    <td class="py-0 px-1 border-b">{{ item.titulo }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.id_candidato }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.id_vacante }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.titulo|default:"-" }}</td>
                     <td class="py-0 px-1 border-b">{{ item.otro_titulo|default:"-" }}</td>
-                    <td class="py-0 px-1 border-b">{{ item.nivel_estudios }}</td>
-                    <td class="py-0 px-1 border-b">{{ item.equivalente_snies|default:"-" }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.nivel_estudios|default:"No reporta estudios" }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.equivalente_snies|default:"Sin equivalente" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

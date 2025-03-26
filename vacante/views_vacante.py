@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Vacante
+from .models import Vacante, Candidato
 from .forms import VacanteForm
 
 def index(request):
