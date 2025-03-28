@@ -13,8 +13,36 @@ from .models import EquivalenciaTitulo, ProgramaAcademicoSnies, NovedadEquivalen
 from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import EquivalenciaTitulo, NovedadEquivalencia, ProgramaAcademicoSnies
-from .forms import EditarNovedadesForm
+import openpyxl
+from django.http import HttpResponse
+from .models import EquivalenciaTitulo
 
+def exportar_equivalencias_excel(request):
+    # Crear libro de Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Equivalencias"
+
+    # Encabezados
+    encabezados = ['Doc Candidato', 'Vacante', 'Título', 'Otro Título', 'Nivel de Estudios', 'Equivalente SNIES']
+    ws.append(encabezados)
+
+    # Agregar datos
+    equivalencias = EquivalenciaTitulo.objects.all()
+    for e in equivalencias:
+        ws.append([
+            e.id_candidato,
+            e.id_vacante,
+            e.titulo,
+            e.nivel_estudios,
+            str(e.equivalente_snies) if e.equivalente_snies else 'Sin equivalente'
+        ])
+
+    # Preparar la respuesta HTTP
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=equivalencias_titulo.xlsx'
+    wb.save(response)
+    return response
 class CargarExcelEquivalenciaTitulo(View):
     def get(self, request):
         return render(request, 'equivalencia_titulo_cargar_excel.html')
@@ -29,30 +57,48 @@ class CargarExcelEquivalenciaTitulo(View):
         path = default_storage.save('tmp/' + excel.name, excel)
         wb = openpyxl.load_workbook(default_storage.path(path))
         ws = wb.active
-
+        cont=1
         # Recorrer desde la segunda fila (sin encabezado)
         for row in ws.iter_rows(min_row=2, values_only=True):
-            if EquivalenciaTitulo.objects.filter(titulo=row[2]) or EquivalenciaTitulo.objects.filter(otro_titulo=row[3]):
+            if row[4]=="Bachiller" or row[4]=="Completar":
                 continue
-               
-            EquivalenciaTitulo.objects.create(
-                id_vacante=row[0],            # Columna A
-                id_candidato=row[1],          # Columna B
-                titulo=row[2],                # Columna C
-                otro_titulo=row[3],           # Columna D
-                nivel_estudios=row[4],        # Columna E
-                equivalente_snies=row[5]      # Columna F
-            )
+             
+            if row[2]=="Busque su título académico en la lista" or row[2]=="" or row[2]==None or row[2]=='Busca tu título académico en la lista. Elige "No aplica" en caso de no encontrarlo' or row[2]=='No aplica (elige esta opción cuando no encuentres tu título)':
+                titulo="No reporta"
+            else:
+                titulo=row[2]
             
-
+            if row[3]=="Busque su título académico en la lista" or row[3]=="" or row[3]==None or row[3]=='Busca tu título académico en la lista. Elige "No aplica" en caso de no encontrarlo' or row[3]=='No aplica (elige esta opción cuando no encuentres tu título)':
+                otro_titulo="No reporta"
+            else:
+                otro_titulo=row[3]   
+            
+            if titulo=="No reporta" and otro_titulo=="No reporta":
+                continue
+            
+            if titulo!="No reporta":                    
+                crear_noevdad_equivalencia(row[0],row[1],titulo,row[4],row[5],titulo + "-"+str(row[4]))   
+            
+            if otro_titulo!="No reporta":                    
+                crear_noevdad_equivalencia(row[0],row[1],otro_titulo,row[4],row[5],otro_titulo + "-"+str(row[4]))                
+                      
+            cont+=1
         messages.success(request, 'Datos cargados correctamente desde el Excel.')
         return redirect('lista_equivalencia_titulo')
 
 
-
+def crear_noevdad_equivalencia(id,idc,tit, ne, eqs, id_e):
+    if not EquivalenciaTitulo.objects.filter(id_equivalencia=id_e).exists():
+        EquivalenciaTitulo.objects.create(
+                            id_vacante=id,            
+                            id_candidato=idc,         
+                            titulo=tit,               
+                            nivel_estudios=ne,        
+                            equivalente_snies=eqs,      
+                            id_equivalencia=id_e 
+                        )
 class ListaEquivalenciaTitulo(View):
     def get(self, request):
-        #EquivalenciaTitulo.objects.all().delete()
         equivalencias = EquivalenciaTitulo.objects.all()
         return render(request, 'equivalencia_titulo_lista.html', {
             'equivalencias': equivalencias
@@ -60,7 +106,6 @@ class ListaEquivalenciaTitulo(View):
         
 class ListaNovedades(View):
     def get(self, request):
-        #NovedadEquivalencia.objects.all().delete()
         novedades = NovedadEquivalencia.objects.filter(descripcion="Sin titulo equivalente")
         return render(request, 'novedades_equivalencia_titulo.html', {'novedades': novedades})
 
@@ -69,8 +114,14 @@ class BuscarEquivalenciasView(View):
     def get(self, request):
         buscar_equivalencias_snies()
         messages.success(request, "Búsqueda de equivalencias completada.")
-        return redirect('lista_equivalencia_titulo')
+        return redirect('lista_novedades_equivalencia')
 
+def limpiar_novedades_equivalencia(request):
+    NovedadEquivalencia.objects.all().delete()
+    EquivalenciaTitulo.objects.all().delete()
+    return redirect('lista_novedades_equivalencia')
+    
+    
 def buscar_equivalencias_snies():
     equivalencias = EquivalenciaTitulo.objects.all()
     cont1 = 1
@@ -94,15 +145,19 @@ def buscar_equivalencias_snies():
             
             else: 
                 # Aquí creamos la NovedadEquivalencia si no se encontró coincidencia en SNIES
+                if eq.titulo=="No reporta":
+                    eq.equivalente_snies= "No aplica"
+                    eq.save()
+                    continue
+                    
                 NovedadEquivalencia.objects.create(
                     descripcion="Sin titulo equivalente",
                     id_vacante=eq.id_vacante,
                     identificacion_candidato=eq.id_candidato,
                     titulo=eq.titulo,
-                    otro_titulo=eq.otro_titulo,
-                    id_equivalencia=eq.id,
+                    nivel_estudios=eq.nivel_estudios,
+                    equivalencia_snies=eq.id,
                 )
-                print(cont1)
                 cont1 += 1 
              
         
@@ -129,7 +184,7 @@ class EditarNovedadesEquivalencia(View):
         equivalencia.save()
 
         # Actualizamos la novedad asociada para quitar la marca de "Sin titulo equivalente"
-        novedad = NovedadEquivalencia.objects.filter(id_equivalencia=equivalencia.id).first()
+        novedad = NovedadEquivalencia.objects.filter(equivalencia_snies=equivalencia.id).first()
         if novedad:
             if novedad.descripcion == "Sin titulo equivalente":
                 novedad.descripcion = equivalencia.equivalente_snies

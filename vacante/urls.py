@@ -35,8 +35,10 @@ from vacante.views_equivalencia_titulo import (
     ListaEquivalenciaTitulo,
     ListaNovedades,
     BuscarEquivalenciasView,
-    EditarNovedadesEquivalencia
-)
+    EditarNovedadesEquivalencia,
+    limpiar_novedades_equivalencia,
+    exportar_equivalencias_excel
+    )
 
 urlpatterns = [
     path('', index, name='index'),
@@ -107,4 +109,6 @@ urlpatterns = [
     path('equivalencias/novedades/', ListaNovedades.as_view(), name='lista_novedades_equivalencia'),
     path('equivalencias/buscar-equivalencias/', BuscarEquivalenciasView.as_view(), name='buscar_equivalencias_snies'),
     path('equivalencias/novedades/<int:pk>/editar/', EditarNovedadesEquivalencia.as_view(), name='editar_novedades_equivalencia'),
+    path('equivalencias/novedades/limpiar/', limpiar_novedades_equivalencia, name='limpiar_novedades_equivalencia'),
+    path('exportar-equivalencias-excel/', exportar_equivalencias_excel, name='exportar_equivalencias_excel'),
 ]

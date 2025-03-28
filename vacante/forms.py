@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vacante, EquivalenciaTitulo, CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
+from .models import NovedadEquivalencia, Vacante, EquivalenciaTitulo, CampoAmplioPregrado, CampoEspecificoPregrado, NivelAcademico, CampoDetalladoPregrado
 
 class CampoAmplioPregradoForm(forms.ModelForm):
     class Meta:
@@ -255,32 +255,9 @@ class ProgramaAcademicoSniesForm(forms.ModelForm):
             "nivel_de_formacion": "Nivel de Formación",
         }
 
-
-class EquivalenciaTituloForm(forms.ModelForm):
-    class Meta:
-        model = EquivalenciaTitulo
-        fields = ['titulo', 'otro_titulo', 'nivel_estudios', 'equivalente_snies']
-        widgets = {
-            'titulo': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            }),
-            'otro_titulo': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            }),
-            'nivel_estudios': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            }),
-            'equivalente_snies': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400'
-            }),
-        }
-
-from django import forms
-from .models import NovedadEquivalencia
-
 class EditarNovedadesForm(forms.ModelForm):
     sugerencia_snies_text = forms.CharField(
-        label='Título SNIES sugerido',
+        label='Buscar equivalente',
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'w-full border rounded px-3 py-1',
@@ -295,12 +272,10 @@ class EditarNovedadesForm(forms.ModelForm):
             'id_vacante',
             'identificacion_candidato',
             'titulo',
-            'otro_titulo',
         ]
         widgets = {
             'descripcion': forms.TextInput(attrs={'class': 'form-control'}),
             'id_vacante': forms.TextInput(attrs={'class': 'form-control'}),
             'identificacion_candidato': forms.TextInput(attrs={'class': 'form-control'}),
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
-            'otro_titulo': forms.TextInput(attrs={'class': 'form-control'}),
         }

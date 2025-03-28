@@ -18,6 +18,11 @@
            class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-4 rounded">
             Ver Novedades
         </a>
+        <!-- ✅ Nuevo botón para exportar -->
+    <a href="{% url 'exportar_equivalencias_excel' %}" 
+    class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-4 rounded">
+     Exportar a Excel
+ </a>
     </div>
     
 
@@ -29,7 +34,6 @@
                     <th class="py-1 px-2 border-b">Doc candidato</th>
                     <th class="py-1 px-2 border-b">Vacante</th>
                     <th class="py-1 px-2 border-b">Título</th>
-                    <th class="py-1 px-2 border-b">Otro Título</th>
                     <th class="py-1 px-2 border-b">Nivel de Estudios</th>
                     <th class="py-1 px-2 border-b">Equivalente SNIES</th>
                 </tr>
@@ -39,9 +43,8 @@
                 <tr class="hover:bg-gray-100">
                     <td class="py-0 px-1 border-b">{{ item.id_candidato }}</td>
                     <td class="py-0 px-1 border-b">{{ item.id_vacante }}</td>
-                    <td class="py-0 px-1 border-b">{{ item.titulo|default:"-" }}</td>
-                    <td class="py-0 px-1 border-b">{{ item.otro_titulo|default:"-" }}</td>
-                    <td class="py-0 px-1 border-b">{{ item.nivel_estudios|default:"No reporta estudios" }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.titulo }}</td>
+                    <td class="py-0 px-1 border-b">{{ item.nivel_estudios }}</td>
                     <td class="py-0 px-1 border-b">{{ item.equivalente_snies|default:"Sin equivalente" }}</td>
                 </tr>
                 {% endfor %}

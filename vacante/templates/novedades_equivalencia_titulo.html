@@ -12,7 +12,7 @@
                     <th class="py-1 px-2 border-b">Candidato</th>
                     <th class="py-1 px-2 border-b">Vacante</th>
                     <th class="py-1 px-2 border-b">Título</th>
-                    <th class="py-1 px-2 border-b">Otro titulo</th>
+                    <th class="py-1 px-2 border-b">Nivel estudio</th>
                     <th class="py-1 px-2 border-b">Novedad</th>
                     <th class="py-1 px-2 border-b text-center">Acciones</th>
                 </tr>
@@ -23,10 +23,10 @@
                     <td class="py-1 px-2 border-b">{{ novedad.identificacion_candidato|default:"No reporta" }}</td>
                     <td class="py-1 px-2 border-b">{{ novedad.id_vacante }}</td>
                     <td class="py-1 px-2 border-b">{{ novedad.titulo|default:"No reporta" }}</td>
-                    <td class="py-1 px-2 border-b">{{ novedad.otro_titulo|default:"No reporta" }}</td>
                     <td class="py-1 px-2 border-b">{{ novedad.descripcion }}</td>
+                    <td class="py-1 px-2 border-b">{{ novedad.nivel_estudios }}</td>
                     <td class="py-1 px-2 border-b text-center">
-                        <a href="{% url 'editar_novedades_equivalencia' novedad.id_equivalencia %}"
+                        <a href="{% url 'editar_novedades_equivalencia' novedad.equivalencia_snies %}"
                            class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-xs">
                             Editar
                         </a>

@@ -183,8 +183,8 @@ class EquivalenciaTitulo(models.Model):
     id_candidato = models.CharField(max_length=50, blank=True, null=True)
     equivalente_snies = models.CharField(max_length=500, blank=True, null=True)
     titulo = models.CharField(max_length=500, blank=True, null=True)
-    otro_titulo = models.CharField(max_length=500, blank=True, null=True)
     nivel_estudios = models.CharField(max_length=80, blank=True, null=True)
+    id_equivalencia= models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.titulo
@@ -195,8 +195,9 @@ class NovedadEquivalencia(models.Model):
     id_vacante = models.CharField(max_length=50, blank=True, null=True)
     identificacion_candidato = models.CharField(max_length=50, blank=True, null=True)
     titulo = models.CharField(max_length=500, blank=True, null=True)
-    otro_titulo = models.CharField(max_length=500, blank=True, null=True)   
-    id_equivalencia = models.CharField(max_length=50, blank=True, null=True)
+    equivalencia_snies = models.CharField(max_length=500, blank=True, null=True)
+    nivel_estudios = models.CharField(max_length=80, blank=True, null=True)
+    id_equivalencia= models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"Novedad: {self.equivalencia.titulo}"
